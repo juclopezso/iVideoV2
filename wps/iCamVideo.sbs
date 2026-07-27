@@ -22,7 +22,15 @@
 %xl(B,Disk Access.bmp,0,0,6)
 %xl(C,Hold Icon.bmp,0,0)
 %xl(D,Playmode Icon.bmp,0,0,4)
+# Album art (right-half now-playing panel, see below)
+%Cl(0,0,216,216,c,c)
 %?St(battery display)<%?cs<%Vd(t)|%Vd(n)|%Vd(n)|%Vd(n)|%Vd(n)>|%?cs<%Vd(tbat)|%Vd(nbat)|%Vd(nbat)|%Vd(nbat)|%Vd(nbat)>%Vd(battery)>
+# Only shrink the list + show the art panel while art exists and a track is
+# playing/paused/seeking (%mp branches 2-5); full-width list otherwise. Must
+# stay up here, before any %Vl/%Vi is declared below, or it gets swallowed as
+# hidden content of whichever labeled viewport comes right before it and
+# never runs.
+%?C<%?mp<%VI(full)|%VI(half)%Vd(aa)|%VI(half)%Vd(aa)|%VI(half)%Vd(aa)|%VI(half)%Vd(aa)|%VI(full)|%VI(full)|%VI(full)|%VI(full)>|%VI(full)>
 %Vl(n,53,4,214,18,2)%Vf(000000)%Vb(FFFFFF)
 %s%ac%?cs<||%?Rp<%Sx(Recording)>|%?tp<%Sx(FM Radio)>|%Sx(Playlist)>
 %Vl(t,53,4,214,18,2)%Vf(000000)%Vb(FFFFFF)
@@ -38,6 +46,17 @@
 %Vl(b,36,5,10,13,-)%Vf(000000)%Vb(FFFFFF)
 %?mh<%xd(C)|%?mr<%xd(C)>>
 %Vi(-,0,24,320,216,1)%Vf(000000)%Vb(FFFFFF)
+# Two extra named UI (list) viewports so the list width can be switched at
+# runtime via %VI. %VI cannot be given "-" (parser rejects a default/dash
+# argument for this tag), so "full" duplicates the geometry of the "-"
+# viewport above (which only exists to satisfy Rockbox's own bootstrap
+# requirement that a default-labelled info-viewport be present).
+%Vi(full,0,24,320,216,1)%Vf(000000)%Vb(FFFFFF)
+%Vi(half,0,24,160,216,1)%Vf(000000)%Vb(FFFFFF)
+# Right-half now-playing album art panel: 216x216 art cropped into a 160x216
+# slot (fills height, crops left/right) so it always reaches the screen edges
+%Vl(aa,160,24,160,216,-)
+%Cd
 %Vl(a,36,4,16,16,-)%Vf(000000)%Vb(FFFFFF)
 %t(0.1)%xd(Ba);%t(0.1)%xd(Bb);%t(0.1)%xd(Bc);%t(0.1)%xd(Bd);%t(0.1)%xd(Be);%t(0.1)%xd(Bf)
 %V(286,6,25,12,-)%Vf(000000)%Vb(FFFFFF)
