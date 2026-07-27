@@ -22,8 +22,11 @@
 %xl(B,Disk Access.bmp,0,0,6)
 %xl(C,Hold Icon.bmp,0,0)
 %xl(D,Playmode Icon.bmp,0,0,4)
-# Album art (right-half now-playing panel, see below)
-%Cl(0,0,216,216,c,c)
+# Album art (right-half now-playing panel, see below). x=-28 shifts the
+# 216px-wide art box left by half of its 56px overhang past the 160px-wide
+# "aa" viewport, so the viewport's clip crops it evenly on both sides
+# instead of only on the right.
+%Cl(-28,0,216,216,c,c)
 %?St(battery display)<%?cs<%Vd(t)|%Vd(n)|%Vd(n)|%Vd(n)|%Vd(n)>|%?cs<%Vd(tbat)|%Vd(nbat)|%Vd(nbat)|%Vd(nbat)|%Vd(nbat)>%Vd(battery)>
 # Only shrink the list + show the art panel while art exists and a track is
 # playing/paused/seeking (%mp branches 2-5); full-width list otherwise. Must
