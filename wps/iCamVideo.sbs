@@ -29,11 +29,11 @@
 %Cl(-28,0,216,216,c,c)
 %?St(battery display)<%?cs<%Vd(t)|%Vd(n)|%Vd(n)|%Vd(n)|%Vd(n)>|%?cs<%Vd(tbat)|%Vd(nbat)|%Vd(nbat)|%Vd(nbat)|%Vd(nbat)>%Vd(battery)>
 # Only shrink the list + show the art panel while art exists and a track is
-# playing/paused/seeking (%mp branches 2-5); full-width list otherwise. Must
-# stay up here, before any %Vl/%Vi is declared below, or it gets swallowed as
-# hidden content of whichever labeled viewport comes right before it and
-# never runs.
-%?C<%?mp<%VI(full)|%VI(half)%Vd(aa)|%VI(half)%Vd(aa)|%VI(half)%Vd(aa)|%VI(half)%Vd(aa)|%VI(full)|%VI(full)|%VI(full)|%VI(full)>|%VI(full)>
+# actively playing or seeking (%mp branches 2,4,5); full-width list otherwise,
+# including while paused (branch 3). Must stay up here, before any %Vl/%Vi is
+# declared below, or it gets swallowed as hidden content of whichever labeled
+# viewport comes right before it and never runs.
+%?C<%?mp<%VI(full)|%VI(half)%Vd(aa)|%VI(full)|%VI(half)%Vd(aa)|%VI(half)%Vd(aa)|%VI(full)|%VI(full)|%VI(full)|%VI(full)>|%VI(full)>
 %Vl(n,53,4,214,18,2)%Vf(000000)%Vb(FFFFFF)
 %s%ac%?cs<||%?Rp<%Sx(Recording)>|%?tp<%Sx(FM Radio)>|%Sx(Playlist)>
 %Vl(t,53,4,214,18,2)%Vf(000000)%Vb(FFFFFF)
