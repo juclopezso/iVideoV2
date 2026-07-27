@@ -33,7 +33,7 @@
 # including while paused (branch 3). Must stay up here, before any %Vl/%Vi is
 # declared below, or it gets swallowed as hidden content of whichever labeled
 # viewport comes right before it and never runs.
-%?C<%?mp<%VI(full)|%VI(half)%Vd(aa)|%VI(full)|%VI(half)%Vd(aa)|%VI(half)%Vd(aa)|%VI(full)|%VI(full)|%VI(full)|%VI(full)>|%VI(full)>
+%?C<%?mp<%VI(full)|%VI(half)%Vd(aa)%Vd(sh)|%VI(full)|%VI(half)%Vd(aa)%Vd(sh)|%VI(half)%Vd(aa)%Vd(sh)|%VI(full)|%VI(full)|%VI(full)|%VI(full)>|%VI(full)>
 %Vl(n,53,4,214,18,2)%Vf(000000)%Vb(FFFFFF)
 %s%ac%?cs<||%?Rp<%Sx(Recording)>|%?tp<%Sx(FM Radio)>|%Sx(Playlist)>
 %Vl(t,53,4,214,18,2)%Vf(000000)%Vb(FFFFFF)
@@ -60,6 +60,14 @@
 # slot (fills height, crops left/right) so it always reaches the screen edges
 %Vl(aa,160,24,160,216,-)
 %Cd
+# Drop-shadow at the list/art seam. Must be its own labeled/hideable
+# viewport (not a bare %V nested after %Cd) because ANY %V/%Vl/%Vi tag
+# always starts a brand-new top-level viewport with absolute screen
+# coordinates and its own show/hide state, never a locally-positioned
+# sub-region of the viewport it textually follows. Declared after "aa" so
+# it draws on top of the art each refresh; shown/hidden together with "aa"
+# via %Vd in the dispatch above.
+%Vl(sh,160,24,4,216,-)%Vb(404040)
 %Vl(a,36,4,16,16,-)%Vf(000000)%Vb(FFFFFF)
 %t(0.1)%xd(Ba);%t(0.1)%xd(Bb);%t(0.1)%xd(Bc);%t(0.1)%xd(Bd);%t(0.1)%xd(Be);%t(0.1)%xd(Bf)
 %V(286,6,25,12,-)%Vf(000000)%Vb(FFFFFF)
