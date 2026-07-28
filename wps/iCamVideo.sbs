@@ -60,7 +60,7 @@
 # slot (fills height, crops left/right) so it always reaches the screen edges
 %Vl(aa,160,24,160,216,-)
 %Cd
-# Divider at the list/art seam: a flat 3px white line. Must be its own
+# Divider at the list/art seam: a flat 2px white line. Must be its own
 # labeled/hideable viewport (not a bare %V nested after %Cd) because ANY
 # %V/%Vl/%Vi tag always starts a brand-new top-level viewport with absolute
 # screen coordinates and its own show/hide state, never a locally-positioned
