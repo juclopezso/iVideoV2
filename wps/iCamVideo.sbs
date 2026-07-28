@@ -30,10 +30,16 @@
 %?St(battery display)<%?cs<%Vd(t)|%Vd(n)|%Vd(n)|%Vd(n)|%Vd(n)>|%?cs<%Vd(tbat)|%Vd(nbat)|%Vd(nbat)|%Vd(nbat)|%Vd(nbat)>%Vd(battery)>
 # Only shrink the list + show the art panel while art exists and a track is
 # actively playing or seeking (%mp branches 2,4,5); full-width list otherwise,
-# including while paused (branch 3). Must stay up here, before any %Vl/%Vi is
+# including while paused (branch 3). Also forced full-width whenever a plugin
+# is running (%cs=14, e.g. the lyrics viewer) - plugins that enable the theme
+# inherit whichever %Vi the SBS last selected via viewport_set_defaults(), so
+# without this check a plugin launched while playing would get stuck with the
+# shrunk canvas and the art panel repainting over it every SBS refresh. %cs
+# values: 1 menus, 2 WPS, 3 rec, 4 FM, 5 playlist, 9 plugin browser, 14 plugin,
+# 15 context menu, 20 track info. Must stay up here, before any %Vl/%Vi is
 # declared below, or it gets swallowed as hidden content of whichever labeled
 # viewport comes right before it and never runs.
-%?C<%?mp<%VI(full)|%VI(half)%Vd(aa)%Vd(sh)|%VI(full)|%VI(half)%Vd(aa)%Vd(sh)|%VI(half)%Vd(aa)%Vd(sh)|%VI(full)|%VI(full)|%VI(full)|%VI(full)>|%VI(full)>
+%?if(%cs, =, 14)<%VI(full)|%?C<%?mp<%VI(full)|%VI(half)%Vd(aa)%Vd(sh)|%VI(full)|%VI(half)%Vd(aa)%Vd(sh)|%VI(half)%Vd(aa)%Vd(sh)|%VI(full)|%VI(full)|%VI(full)|%VI(full)>|%VI(full)>>
 %Vl(n,53,4,214,18,2)%Vf(000000)%Vb(FFFFFF)
 %s%ac%?cs<||%?Rp<%Sx(Recording)>|%?tp<%Sx(FM Radio)>|%Sx(Playlist)>
 %Vl(t,53,4,214,18,2)%Vf(000000)%Vb(FFFFFF)

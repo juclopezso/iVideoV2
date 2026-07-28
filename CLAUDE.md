@@ -81,7 +81,14 @@ Anubis bot-protection, so don't trust them over the source.
 - `%?tag<branch1|branch2|...>` is the conditional/ternary construct. `%mp` (playback status) has 9
   branches in a fixed order: `1 stop | 2 play | 3 pause | 4 ffwd | 5 rew | 6 record |
   7 record-paused | 8 radio | 9 radio-muted` — confirmed against the SBS's own existing playmode
-  icon logic. Read the innermost condition first when tracing behavior.
+  icon logic. Read the innermost condition first when tracing behavior. `%cs` (current screen)
+  returns `apps/misc.h`'s `enum current_activity` value, 1-20 in a fixed order (confirmed against
+  `manual/appendix/wps_tags.tex` and `skin_tokens.c` in Rockbox master): `1 menus | 2 WPS | 3 rec |
+  4 FM radio | 5 playlist | 6 settings | 7 file browser | 8 database browser | 9 plugin browser |
+  10 quickscreen | 11 pitchscreen | 12 setting chooser | 13 playlist catalogue | 14 plugin |
+  15 context menu | 16 system info | 17 time/date | 18 bookmark browser | 19 shortcuts menu |
+  20 track info`. The existing 5-branch `%?cs<...>` dispatches in this SBS (title/battery text)
+  rely on out-of-range values clamping to their last branch.
 - `%Cl(x,y,maxwidth,maxheight,xalign,yalign)` declares the now-playing album art box (once per
   skin file); `%Cd` draws it inside whatever viewport is current when `%Cd` executes; `%C` is true
   when the current track has art. `x`/`y` are plain signed pixel offsets **local to the viewport
@@ -124,10 +131,18 @@ available, scrolling track text otherwise). Implementation, near the top of the 
   only fades vertically, top-to-bottom, hardcoded in the LCD driver, so it couldn't do a
   horizontal fade either way.)
 - A single dispatch line, positioned right after the existing `%?St(battery display)<...>` header
-  dispatch (must stay there — see the viewport-content-scope note above). `%mp` branches: `1 stop |
-  2 play | 3 pause | 4 ffwd | 5 rew | 6 record | 7 record-paused | 8 radio | 9 radio-muted` — only
-  2, 4, 5 get the art panel + shadow; 3 (pause) intentionally falls back to `full`:
-  `%?C<%?mp<%VI(full)|%VI(half)%Vd(aa)%Vd(sh)|%VI(full)|%VI(half)%Vd(aa)%Vd(sh)|%VI(half)%Vd(aa)%Vd(sh)|%VI(full)|%VI(full)|%VI(full)|%VI(full)>|%VI(full)>`
+  dispatch (must stay there — see the viewport-content-scope note above). Outermost check is
+  `%?if(%cs, =, 14)` (current screen = plugin): if any plugin is running, force `full` regardless
+  of playback state. Otherwise fall through to the original `%mp` branches: `1 stop | 2 play |
+  3 pause | 4 ffwd | 5 rew | 6 record | 7 record-paused | 8 radio | 9 radio-muted` — only 2, 4, 5
+  get the art panel + shadow; 3 (pause) intentionally falls back to `full`:
+  `%?if(%cs, =, 14)<%VI(full)|%?C<%?mp<%VI(full)|%VI(half)%Vd(aa)%Vd(sh)|%VI(full)|%VI(half)%Vd(aa)%Vd(sh)|%VI(half)%Vd(aa)%Vd(sh)|%VI(full)|%VI(full)|%VI(full)|%VI(full)>|%VI(full)>>`
+  The plugin check exists because a plugin that enables the theme (e.g. the lyrics viewer,
+  `apps/plugins/lrcplayer.c`, via `viewportmanager_theme_enable()`) gets whichever `%Vi` the SBS
+  last selected as its drawing area (`apps/gui/viewport.c` `viewport_set_defaults()` →
+  `sb_skin_get_info_vp()`), and `sb_skin_update()` keeps repainting the SBS — including the art —
+  over the plugin's screen for as long as it runs. Without this check, a plugin launched during
+  playback would be stuck at 160px with art painted on top of it.
 - `%Cl(-28,0,216,216,c,c)` — the crop-centering offset described above (`-(216-160)/2`).
 
 If you resize the art box or the `half` viewport width, recompute that `-28` by hand.
