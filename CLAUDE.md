@@ -7,8 +7,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A **Rockbox** theme called "iCamVideo" (v1.2) for the iPod Video/Classic (320x240, 24-bit
 color). Rockbox is open-source firmware for digital audio players; themes are plain-text layout
 scripts ("tags") plus bitmap assets, not compiled code. There is no build system, package
-manager, linter, or test suite — this is a pure asset/config repo. It's the live continuation of
-an earlier "iVideo" theme (that sibling directory is now an empty shell).
+manager, linter, or test suite for the theme itself — it's a plain asset/config tree. The repo
+also carries a small amount of device-side tooling under `tools/` (dark-bitmap generation, video
+conversion — see below) that isn't part of the theme but supports using it. It's the live
+continuation of an earlier "iVideo" theme (that sibling directory is now an empty shell).
 
 Ships in two variants, selected as separate entries in Rockbox's theme list: "iCamVideo" (light,
 the original) and "iCamVideo Dark". See "Light/dark variants" below for how the dark copy is
@@ -47,10 +49,14 @@ must carry the attribution text specified at the top of each `.wps`/`.sbs`/`.fms
 - `tools/make-dark.py` — regenerates `wps/iCamVideo-Dark/*.bmp` and
   `backdrops/iCamVideo_Backdrop_Dark.bmp` from their light originals. Re-run it any time a light
   bitmap changes.
+- `tools/convert-video.py` — converts arbitrary video files into the MPEG-PS `.mpg` format
+  Rockbox's `mpegplayer` plugin can play, optionally copying results straight onto a mounted
+  iPod. Not theme-owned, not touched by `sync-to-ipod.sh` — see "Converting videos" below.
 - `sync-to-ipod.sh` — copies this repo's theme-owned files (both variants) onto a mounted iPod
   (default `/Volumes/JUANCHO'S I`, override with `$1`). It lists each file individually rather
   than globbing — remember to add new assets to it by hand if you add any (the `wps/iCamVideo/`
-  and `wps/iCamVideo-Dark/` bitmap folders are the exception: those are globbed).
+  and `wps/iCamVideo-Dark/` bitmap folders are the exception: those are globbed). Videos are user
+  media, not theme assets, so this script deliberately does not handle them.
 
 ## Editing the layout files (`.wps` / `.sbs` / `.fms`)
 
@@ -220,6 +226,55 @@ automatically).
 When editing a layout file, mirror the change into its `-Dark` counterpart per the diff table
 above (usually a no-op copy, since color literals shouldn't be there) — same rule as the
 `-no-clock` mirroring below, just one more axis.
+
+## Converting videos (`tools/convert-video.py`)
+
+The `mpegplayer` plugin (`apps/plugins/mpegplayer/` in Rockbox itself) only decodes a narrow,
+legacy format — verified against `Rockbox/rockbox@master` source, not the wiki (stale/blocked by
+Anubis bot-protection):
+
+| Constraint | Why |
+|---|---|
+| Container: **MPEG program stream (`.mpg`) only** | `mpeg_parser.c` probes for a PES packet and sets `STREAM_FMT_MPEG_PS`; with none found in the first 256KB it falls back to `STREAM_FMT_MPV` (raw video elementary stream, silent). No MPEG-TS/MP4 support exists. |
+| Video: **MPEG-1/MPEG-2** | decoded via `libmpeg2/` under the plugin dir. |
+| Audio: **MPEG audio layer I/II/III** (MP2/MP3) | `audio_thread.c` decodes via libmad. |
+| Resolution: **320x240** (native LCD) | `video_out_rockbox.c` can scale/crop mismatched video, but both cost CPU the 80MHz PP5021 doesn't have to spare — encode to native size instead. |
+| Audio: **44100Hz stereo** | the hardware's native rate; other rates make `audio_thread.c` reconfigure the DSP resampler at playback time. |
+| Framerate: one of the **MPEG-2-legal rates** (23.976/24/25/29.97/30/50/59.94/60) | `mpeg2video` hard-errors on anything else. |
+
+`tools/convert-video.py` (stdlib-only Python, same posture as `make-dark.py`) wraps `ffmpeg`/
+`ffprobe` to produce compliant `.mpg` files:
+
+```
+tools/convert-video.py movie.mkv                      # -> ./converted-video/movie.mpg
+tools/convert-video.py -o out/ --bitrate 400k dir/     # batch-convert a directory
+tools/convert-video.py --ipod movie.mkv                # also copy to <mount>/Video/
+tools/convert-video.py -n movie.mkv                    # dry run: print the ffmpeg command
+tools/convert-video.py -v movie.mkv                     # verbose: probe info, full cmd, live ffmpeg output
+```
+
+It probes each source, snaps the source framerate to the nearest legal MPEG-2 rate (capped at
+30fps to stay inside the CPU budget; `--fps` overrides), and scales/pads to exactly 320x240 with
+`setsar=1` (`--fit pad|crop|stretch` picks letterbox/crop/distort). Default video bitrate is
+600k — drop it (`--bitrate 400k`) if a real device stutters. `--ipod [mount]` mirrors
+`sync-to-ipod.sh`'s mount-detection contract (default `/Volumes/JUANCHO'S I`, errors clearly if
+`.rockbox` isn't found there) but writes to `<mount>/Video/`, a path `sync-to-ipod.sh` never
+touches. A bad file in a batch is reported and skipped, not fatal to the rest of the run.
+
+**Do not add `-maxrate`/`-bufsize`/`-muxrate` to the `ffmpeg` invocation in `build_cmd()`.**
+Confirmed by direct testing (not the wiki): with those set, ffmpeg's `-f mpeg` (MPEG-1 System
+Stream) muxer's internal STD buffer-model check spuriously logs "buffer underflow st=1 bufi=...
+size=..." throughout the *entire* encode — harmless on short clips, but on a real ~32-minute
+source it eventually escalates into a hard failure (`ffmpeg` exit 234) even though the source was
+completely clean. Letting ffmpeg auto-choose its VBV/mux parameters (i.e. omitting those flags
+entirely) eliminates it outright.
+
+Separately, `convert-video.py` retries a failed conversion once, trimmed to
+`ffprobe`-reported video duration minus `RETRY_TRIM_MARGIN` (15s), because some real-world
+sources (observed on a screen recording) have a genuinely corrupted tail right around where the
+video track ends — ffmpeg's demuxer desyncs on garbage bytes there (`Invalid NAL unit size`) and
+the encode dies instead of ending cleanly. `-shortest` alone does not protect against this, since
+the demuxer has to read into the corrupted region before it can even detect the stream ended.
 
 ## Testing changes
 
