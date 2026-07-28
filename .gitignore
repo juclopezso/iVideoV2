@@ -1,0 +1,4 @@
+.DS_Store
+converted-video/
+__pycache__/
+*.pyc
