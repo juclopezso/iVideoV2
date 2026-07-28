@@ -1,12 +1,17 @@
-# Theme: iCamVideo
+# TO BLOCK CLOCK DISPLAYING, RENAME FILE TO iCamVideo-Dark.fms AND REPLACE THE CORRESPONDENT FILE
+# Theme: iCamVideo Dark
+# Dark-mode variant of iCamVideo. Colors are set in themes/iCamVideo-Dark.cfg;
+# this file is otherwise byte-identical to iCamVideo-no-clock-FMS.txt - it
+# exists as a separate file so %xl/%X bitmap loads resolve into
+# wps/iCamVideo-Dark/.
 # By: Humberto Santana (humbertosantana@hotmail.com)
 # License: Creative Commons Attribution-Share Alike 3.0 (http://creativecommons.org/licenses/by-sa/3.0/)
 # Derived from iLike Theme for 320x240 by Alan Brito, which was ported from the 176x132 version by H. Pearce
 # If used for other works, as per this license, please include the following Attribution Text: "Modified/Derived from iVideo theme for iPod Video (CC-BY-SA 3.0) by Humberto Santana"
 # Sorry for the mess in the code, the base theme wasn't commented and I was too lazy to do it.
 #
-# Version 1.2
-# Last Update: February 22nd, 2011
+# Version 1.0
+# Last Update: February 8th, 2011
 # First Version: February 8th, 2011
 #
 # FMS File
@@ -50,7 +55,7 @@
 %V(11,4,18,15,-)
 %?mp<|||||||%xd(Ga)|%xd(Gb)>
 %ax%V(15,32,160,18,2)
-%s%al%?tm<%Sx(Scan)|%?Sr<%Tc %Sx(of) %Ti|%Ti %Sx(of) %Tc>>
+%s%al%?tm<%Sx(Scan)|%?Sr<%Tc %Sx(of) %Ti %Sx(Preset)|%Sx(Preset) %Ti %Sx(of) %Tc>>
 %ax%V(15,61,96,96,-)
 %Cl(0,0,96,96,c,c)
 %?C<%Cd|%xd(M)>
@@ -61,14 +66,14 @@
 %ax%V(120,100,190,18,2)
 %s%al%?Tn<%Tn|%?ty<%ty|%?tt<Tuned|tune>>>
 %ax%V(120,130,190,18,2)
-%s%al%?tz<%tz|%Sx(Signal strength:) %?tr<Faint/No Signal|Weak|Fair|Strong|Very Strong>>
-%?mv(5)<%?St(battery display)<%Vd(title)|%Vd(titlebat)>|%Vd(clock)>
+%s%al%?tz<%tz|%Sx(Signal strength:) %?tr<%?tr<Faint/No Signal|Weak|Fair|Strong|Very Strong>>>
+%?St(battery display)<%Vd(title)|%Vd(titlebat)>
 %Vl(title,53,4,214,18,2)
 %s%ac%Sx(FM Radio)
 %Vl(titlebat,60,4,200,18,2)
 %s%ac%Sx(FM Radio)
-%Vl(clock,60,4,200,18,2)
-%t(10)%s%ac%Sx(FM Radio);%t(30)%s%ac%?cf<%cH:%cM|%cl:%cM %cP>
+#%Vl(clock,60,4,200,18,2)
+#%t(10)%s%ac%Sx(FM Radio);%t(30)%s%ac%?cf<%cH:%cM|%cl:%cM %cP>
 %ax%V(282,34,17,14,-)
 %?ts<%xd(H)|>
 %Vl(volume,20,206,280,18,2)

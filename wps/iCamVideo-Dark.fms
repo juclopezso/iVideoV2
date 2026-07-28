@@ -1,4 +1,7 @@
-# Theme: iCamVideo
+# Theme: iCamVideo Dark
+# Dark-mode variant of iCamVideo. Colors are set in themes/iCamVideo-Dark.cfg;
+# this file is otherwise byte-identical to iCamVideo.fms - it exists as a
+# separate file so %xl/%X bitmap loads resolve into wps/iCamVideo-Dark/.
 # By: Humberto Santana (humbertosantana@hotmail.com)
 # License: Creative Commons Attribution-Share Alike 3.0 (http://creativecommons.org/licenses/by-sa/3.0/)
 # Derived from iLike Theme for 320x240 by Alan Brito, which was ported from the 176x132 version by H. Pearce

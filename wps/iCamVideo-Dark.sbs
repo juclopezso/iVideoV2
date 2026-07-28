@@ -1,4 +1,7 @@
-# Theme: iCamVideo
+# Theme: iCamVideo Dark
+# Dark-mode variant of iCamVideo. Colors are set in themes/iCamVideo-Dark.cfg;
+# this file only carries the one color that %dr requires explicitly (the
+# art-panel seam divider, below) since %dr has no cfg-inherited form.
 # By: Humberto Santana (humbertosantana@hotmail.com)
 # License: Creative Commons Attribution-Share Alike 3.0 (http://creativecommons.org/licenses/by-sa/3.0/)
 # Derived from iLike Theme for 320x240 by Alan Brito, which was ported from the 176x132 version by H. Pearce
@@ -78,7 +81,7 @@
 # the theme's default background (white) and happens before any child tag
 # (including %Vb) runs.
 %Vl(sh,160,24,2,216,-)
-%dr(0,0,2,216,FFFFFF)
+%dr(0,0,2,216,292829)
 %Vl(a,36,4,16,16,-)
 %t(0.1)%xd(Ba);%t(0.1)%xd(Bb);%t(0.1)%xd(Bc);%t(0.1)%xd(Bd);%t(0.1)%xd(Be);%t(0.1)%xd(Bf)
 %V(286,6,25,12,-)

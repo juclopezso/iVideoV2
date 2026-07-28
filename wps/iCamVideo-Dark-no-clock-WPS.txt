@@ -1,5 +1,8 @@
-# TO BLOCK CLOCK DISPLAYING, RENAME FILE TO iCamVideo.wps AND REPLACE THE CORRESPONDENT FILE
-# Theme: iCamVideo
+# TO BLOCK CLOCK DISPLAYING, RENAME FILE TO iCamVideo-Dark.wps AND REPLACE THE CORRESPONDENT FILE
+# Theme: iCamVideo Dark
+# Dark-mode variant of iCamVideo. Colors are set in themes/iCamVideo-Dark.cfg;
+# this file only overrides the dim "next track" text color, below, since that
+# color (unlike the default fg/bg) isn't one of the cfg's inherited defaults.
 # By: Humberto Santana (humbertosantana@hotmail.com)
 # License: Creative Commons Attribution-Share Alike 3.0 (http://creativecommons.org/licenses/by-sa/3.0/)
 # Derived from iLike Theme for 320x240 by Alan Brito, which was ported from the 176x132 version by H. Pearce
@@ -47,15 +50,15 @@
 %?mv(2.0)<%Vd(g)%xd(J)%xd(K)%xd(L)%xd(M)%?St(volume display)<|%Vd(volume)>|%Vd(d)%Vd(f)>
 %ax%Vl(currenta,120,70,190,18,2)
 %s%al%?it<%it|%fn>
-%ax%Vl(nexta,120,70,190,18,2)%Vf(888888)
+%ax%Vl(nexta,120,70,190,18,2)%Vf(BDBABD)
 %s%al%?It<%It|%Fn>
 %ax%Vl(currenta,120,100,190,18,2)
 %s%al%?ia<%ia|%?d(2)<%d(2)|%?Sr<kbps%fb %fc|%fc %fbkbps>>>
-%ax%Vl(nexta,120,100,190,18,2)%Vf(888888)
+%ax%Vl(nexta,120,100,190,18,2)%Vf(BDBABD)
 %s%al%?Ia<%Ia|%?D(2)<%D(2)|%?Sr<kbps%Fb %Fc|%Fc %Fbkbps>>>
 %Vl(currentb,10,70,300,18,2)
 %s%ac%?it<%it|%fn>
-%Vl(nextb,10,70,300,18,2)%Vf(888888)
+%Vl(nextb,10,70,300,18,2)%Vf(BDBABD)
 %s%ac%?It<%It|%Fn>
 %Vl(currentb,10,130,300,18,2)
 %s%ac%?id<%id|%?d(3)<%d(3)|%?Sr<kHz%fk|%fkkHz>>>
@@ -92,7 +95,7 @@
 %ac%bl%%
 %Vl(currentb,10,100,300,18,2)
 %s%ac%?ia<%ia|%?d(3)<%d(2)|%?Sr<kbps%fb %fc|%fc %fbkbps>>>
-%Vl(nextb,10,100,300,18,2)%Vf(888888)
+%Vl(nextb,10,100,300,18,2)%Vf(BDBABD)
 %s%ac%?Ia<%Ia|%?D(3)<%D(2)|%?Sr<kbps%Fb %Fc|%Fc %Fbkbps>>>
 %Vl(volume,20,206,280,18,2)
 %ac%pv dB
